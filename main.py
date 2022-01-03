@@ -17,36 +17,34 @@ WHITE = (255, 255, 255)
 pygame.display.set_caption("Pong")
 
 #Player Class
-class Player(object):
+class Player(pygame.sprite.Sprite):
     #Init
     def __init__(self):
         super().__init__()
         #Creates the player and sets its starting point
-        self.rect = pygame.draw.rect(screen, WHITE, (20, 20, 4, 28))
+        self.image = pygame.Surface([4, 28])
+        self.image.fill(WHITE)
+        pygame.draw.rect(self.image,WHITE,pygame.Rect(5, 5, 4, 28))
+        self.rect = self.image.get_rect()
         self.x = 20
         self.y = 20
     #Movement of the player
-    def update_position(self):
+    def update(self):
         #Gets the key stroke
         key = pygame.key.get_pressed()
         dist = 2 # distance moved in 1 frame,
-        if key[pygame.K_DOWN] and self.y  < 480 - 28 : # down key
-            self.y += dist # move down
-        elif key[pygame.K_UP] and self.y > 0: # up key
-            self.y -= dist # move up
-        
-    #To display the player
-    def draw(self, surface):
-        #Draws the player on the screen with color white at the correct points, with a size of 4x28
-        pygame.draw.rect(screen, WHITE, (self.x, self.y, 4, 28))
+        if key[pygame.K_DOWN] and self.rect.y  < 480 - 28 : # down key
+            self.rect.y += dist # move down
+        elif key[pygame.K_UP] and self.rect.y > 0: # up key
+            self.rect.y -= dist # move up
 
-        
-        
-
-
-
-#Init the  object
+#Init the sprite
 P1 = Player()
+P1.rect.x = 20
+P1.rect.y = 20
+#Create Sprite List
+player_sprites_list = pygame.sprite.Group()
+player_sprites_list.add(P1)
 #Program loop
 while True:
     for event in pygame.event.get():
@@ -54,13 +52,13 @@ while True:
         pygame.quit()
         sys.exit()
     #Updates the position of the player
-    P1.update_position()
+    player_sprites_list.update()
     
 
     #Makes the backround black
     screen.fill(BLACK) 
     #Draws our player
-    P1.draw(screen) 
+    player_sprites_list.draw(screen) 
    
           
     
