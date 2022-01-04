@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 import sys
-from random import randint
+from random import *
 #Starts pygame
 pygame.init()
 #Creates the display with a width of 640 by 480 pixles
@@ -16,7 +16,6 @@ WHITE = (255, 255, 255)
 
 #Changes the name our window to Pong
 pygame.display.set_caption("Pong")
-pointwinner = 'r'
 
 
 
@@ -70,30 +69,29 @@ class Ball(pygame.sprite.Sprite):
         self.image.fill(WHITE)
         pygame.draw.circle(self.image,WHITE, (6 // 2, 6 //2), 6)
         self.rect = self.image.get_rect()
-        generator = randint(0,1)
-        pointwinner = 'r'
-        if pointwinner == 'r':
-            if generator == 1:
-                self.rect.x = 225
-                self.rect.y = 20
-            else:
-                self.rect.x = 225
-                self.rect.y = 460
-        if pointwinner == 'l':
-            if generator == 1:
-                self.rect.x = 215
-                self.rect.y = 20
-            else:
-                self.rect.x = 215
-                self.rect.y = 460
-#Function to calculate the movement of the ball
-    def update(self, collisionwithbar, changeinx, changeiny):
-        if self.rect.x == 640:
-            self.rect.kill()
-            pointwinner = 'r'
-        if self.rect.x == 0:
-            self.rect.kill()
-            pointwinner = 'l'
+    def reset(self, winner):
+        num = randint(0,1)
+        if winner == 'l' and num == 0:
+            self.rect.x = 320
+            self.rect.y = 20
+        elif winner == 'l' and num == 1:
+            self.rect.x = 320
+            self.rect.y = 440
+
+        elif winner == 'r' and num == 0:
+            self.rect.x = 320
+            self.rect.y = 20
+
+        else:
+            self.rect.x = 320
+            self.rect.y = 440
+       
+
+
+       
+
+
+
 
 
 
@@ -116,6 +114,7 @@ P2.rect.y = 20
 ball = Ball()
 ball.rect.x = 225
 ball.rect.y = 20
+global ball_path
 ball_path = [2,2]
 #Create Sprite List
 player_sprites_list = pygame.sprite.Group()
@@ -133,8 +132,13 @@ while True:
     player_sprites_list.update()
     #Collision Detection
     ball.rect.move_ip(ball_path)
-    if ball.rect.x > 640 or ball.rect.x < 0:
-        ball.kill()
+    if ball.rect.x > 640:
+        current_winner = 'r'
+        ball.reset(current_winner)
+    if ball.rect.x < 0:
+        current_winner = 'l'
+        ball.reset(current_winner)
+
     if ball.rect.y < 0 or ball.rect.y > 480:
         ball_path[1] = -ball_path[1]
     if P1.rect.colliderect(ball.rect)== 1 or P2.rect.colliderect(ball.rect) == 1:
