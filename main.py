@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import sys
 from random import *
+import time
 #Starts pygame
 pygame.init()
 #Creates the display with a width of 640 by 480 pixles
@@ -67,24 +68,31 @@ class Ball(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface([6, 6])
         self.image.fill(WHITE)
+        #This creates the circle and its hitbox
         pygame.draw.circle(self.image,WHITE, (6 // 2, 6 //2), 6)
         self.rect = self.image.get_rect()
+    #This is the code ran after a point is scored
     def reset(self, winner):
+        #Generate a random number
         num = randint(0,1)
+        #Decision tree depending on random num and winner
         if winner == 'l' and num == 0:
-            self.rect.x = 320
+            self.rect.x = 340
             self.rect.y = 20
         elif winner == 'l' and num == 1:
-            self.rect.x = 320
+            self.rect.x = 340
             self.rect.y = 440
 
         elif winner == 'r' and num == 0:
-            self.rect.x = 320
+            self.rect.x = 300
             self.rect.y = 20
 
         else:
-            self.rect.x = 320
+            self.rect.x = 300
             self.rect.y = 440
+        #Wait after every point to reset
+        time.sleep(2)
+
        
 
 
@@ -104,7 +112,7 @@ class Ball(pygame.sprite.Sprite):
 
 
 
-#Init the sprite
+#Init the sprites
 P1 = Player1()
 P1.rect.x = 20
 P1.rect.y = 20
@@ -114,7 +122,7 @@ P2.rect.y = 20
 ball = Ball()
 ball.rect.x = 225
 ball.rect.y = 20
-global ball_path
+#Init the ball's path
 ball_path = [2,2]
 #Create Sprite List
 player_sprites_list = pygame.sprite.Group()
@@ -128,6 +136,7 @@ while True:
        if event.type == pygame.QUIT:
         pygame.quit()
         sys.exit()
+
     #Updates the position of the player
     player_sprites_list.update()
     #Collision Detection
@@ -138,7 +147,6 @@ while True:
     if ball.rect.x < 0:
         current_winner = 'l'
         ball.reset(current_winner)
-
     if ball.rect.y < 0 or ball.rect.y > 480:
         ball_path[1] = -ball_path[1]
     if P1.rect.colliderect(ball.rect)== 1 or P2.rect.colliderect(ball.rect) == 1:
@@ -151,6 +159,8 @@ while True:
     #Draws our player
     player_sprites_list.draw(screen) 
     ball_sprite_list.draw(screen)
+    pygame.draw.rect(screen, WHITE, (320,0,5,480))
+    
           
     
     
