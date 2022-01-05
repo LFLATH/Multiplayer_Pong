@@ -30,4 +30,5 @@ class Ball(pygame.sprite.Sprite):
             self.rect.x = 300
             self.rect.y = 440
         #Wait after every point to reset
+         
         time.sleep(2)
