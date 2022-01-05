@@ -60,11 +60,9 @@ def gameState2():
         ball.rect.move_ip(ball_path)
         if ball.rect.x > 640:
             current_winner = 'r'
-            current_scores[1] += 1
             ball.reset(current_winner)
         if ball.rect.x < 0:
             current_winner = 'l'
-            current_scores[0] += 1
             ball.reset(current_winner)
         if ball.rect.y < 0 or ball.rect.y > 480:
             ball_path[1] = -ball_path[1]

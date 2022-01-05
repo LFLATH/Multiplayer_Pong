@@ -15,3 +15,4 @@ WHITE = (255, 255, 255)
 font = pygame.font.Font('Font.ttf', 36)
 #Changes the name our window to Pong
 pygame.display.set_caption("Pong")
+current_scores = [0,0]

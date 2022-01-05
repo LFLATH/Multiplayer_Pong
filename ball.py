@@ -18,17 +18,31 @@ class Ball(pygame.sprite.Sprite):
         if winner == 'l' and num == 0:
             self.rect.x = 340
             self.rect.y = 20
+            current_scores[0] += 1
+
         elif winner == 'l' and num == 1:
             self.rect.x = 340
             self.rect.y = 440
+            current_scores[0] += 1
+
 
         elif winner == 'r' and num == 0:
             self.rect.x = 300
             self.rect.y = 20
+            current_scores[1] += 1
+
 
         else:
             self.rect.x = 300
             self.rect.y = 440
+            current_scores[1] += 1
+
         #Wait after every point to reset
          
+        font = pygame.font.Font('Font.ttf', 64)
+        text1 = font.render(str(current_scores[0]), 1, WHITE)
+        text2 = font.render(str(current_scores[1]), 1, WHITE)
+        screen.blit(text1, (213, 30))
+        screen.blit(text2, (426, 30))
+        pygame.display.update()
         time.sleep(2)
