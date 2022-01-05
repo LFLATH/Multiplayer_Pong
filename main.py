@@ -3,6 +3,7 @@ from pygame.locals import *
 import sys
 from random import *
 import time
+import pygame.freetype
 #Starts pygame
 pygame.init()
 #Creates the display with a width of 640 by 480 pixles
@@ -14,7 +15,8 @@ FPS = pygame.time.Clock()
 #Defining our two colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-
+#Create and define our font
+font = pygame.font.Font('Font.ttf', 36)
 #Changes the name our window to Pong
 pygame.display.set_caption("Pong")
 
@@ -92,36 +94,16 @@ class Ball(pygame.sprite.Sprite):
             self.rect.y = 440
         #Wait after every point to reset
         time.sleep(2)
-
-       
-
-
-       
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #Init the sprites
 P1 = Player1()
 P1.rect.x = 20
 P1.rect.y = 20
 P2 = Player2()
 P2.rect.x = 620
-P2.rect.y = 20
+P2.rect.y = 150
 ball = Ball()
 ball.rect.x = 225
-ball.rect.y = 20
+ball.rect.y = 150
 #Init the ball's path
 ball_path = [2,2]
 #Create Sprite List
@@ -130,42 +112,85 @@ player_sprites_list.add(P1)
 player_sprites_list.add(P2)
 ball_sprite_list = pygame.sprite.Group()
 ball_sprite_list.add(ball)
-#Program loop
-while True:
-    for event in pygame.event.get():
-       if event.type == pygame.QUIT:
-        pygame.quit()
-        sys.exit()
 
-    #Updates the position of the player
-    player_sprites_list.update()
-    #Collision Detection
-    ball.rect.move_ip(ball_path)
-    if ball.rect.x > 640:
-        current_winner = 'r'
-        ball.reset(current_winner)
-    if ball.rect.x < 0:
-        current_winner = 'l'
-        ball.reset(current_winner)
-    if ball.rect.y < 0 or ball.rect.y > 480:
-        ball_path[1] = -ball_path[1]
-    if P1.rect.colliderect(ball.rect)== 1 or P2.rect.colliderect(ball.rect) == 1:
-        ball_path[0] = -ball_path[0]
+
+#Inits the scores
+current_scores = [0,0]
+
+#Opening Screen Method
+def gameState1():
+    #Create Variable to check if the person clicked the play button
+    clicked = False
+    #Loop for the menu
+    while clicked == False:
+        #Find the Mouse Position
+        mousePOS = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            #Check to see if the person clicked on the button
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if 240 <= mousePOS[0] <= 240 + 140 and 250 <= mousePOS[1] <= 250 + 40:
+                    clicked = True
+
+
+        screen.fill(BLACK) 
+        #Added a function to underline the button if someone hovers over it
+        if 240 <= mousePOS[0] <= 240 + 140 and 250 <= mousePOS[1] <= 250 + 40:
+            pygame.draw.rect(screen, WHITE, [240, 300, 140, 5])
+        #Define our two fonts
+        font = pygame.font.Font('Font.ttf', 64)
+        font2 = pygame.font.Font('Font.ttf', 32)
+        #Render the text for these fonts
+        text = font.render("PONG", 1, WHITE)
+        text2 = font2.render("PLAY", 1, BLACK)
+        #Create a rect for the title
+        text_rect = text.get_rect(center = (320, 100))
+        #Create the texts and the button
+        screen.blit(text, text_rect)
+        pygame.draw.rect(screen, WHITE, [240, 250, 140, 40])
+        screen.blit(text2,(255,245))
+
+        pygame.display.update()
         
+   
 
+#Main Game Screen Method
+def gameState2():
+    #Program loop
+    while True:
+        FPS.tick(FramesPerSecond)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        #Updates the position of the player
+        player_sprites_list.update()
+        #Collision Detection
+        ball.rect.move_ip(ball_path)
+        if ball.rect.x > 640:
+            current_winner = 'r'
+            current_scores[1] += 1
+            ball.reset(current_winner)
+        if ball.rect.x < 0:
+            current_winner = 'l'
+            current_scores[0] += 1
+            ball.reset(current_winner)
+        if ball.rect.y < 0 or ball.rect.y > 480:
+            ball_path[1] = -ball_path[1]
+        if P1.rect.colliderect(ball.rect)== 1 or P2.rect.colliderect(ball.rect) == 1:
+            ball_path[0] = -ball_path[0]
+        #Makes the backround black
+        screen.fill(BLACK) 
+        #Draws our player
+        player_sprites_list.draw(screen) 
+        ball_sprite_list.draw(screen)
+        pygame.draw.rect(screen, WHITE, (320,0,5,480))
+        pygame.display.update()
 
-    #Makes the backround black
-    screen.fill(BLACK) 
-    #Draws our player
-    player_sprites_list.draw(screen) 
-    ball_sprite_list.draw(screen)
-    pygame.draw.rect(screen, WHITE, (320,0,5,480))
-    
-          
-    
-    
-    #Needs to be at the end of the loop so it updates
-    pygame.display.update()
-    #Ticks the fram forward
-    FPS.tick(FramesPerSecond)
+            
+#run the game states in order
+gameState1()
+gameState2()
     
