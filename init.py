@@ -13,6 +13,9 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 #Create and define our font
 font = pygame.font.Font('Font.ttf', 36)
+#Create the icon
+icon = pygame.image.load('Logo.png')
 #Changes the name our window to Pong
 pygame.display.set_caption("Pong")
 current_scores = [0,0]
+pygame.display.set_icon(icon)
