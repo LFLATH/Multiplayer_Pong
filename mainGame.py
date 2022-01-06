@@ -45,33 +45,53 @@ ball_sprite_list.add(ball)
 
 #Inits the scores
 current_scores = [0,0]
+#Init winner
 #Main Game Screen Method
-def gameState2():
-    #Program loop
-    while True:
-        FPS.tick(FramesPerSecond)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-        #Updates the position of the player
-        player_sprites_list.update()
-        #Collision Detection
-        ball.rect.move_ip(ball_path)
-        if ball.rect.x > 640:
-            current_winner = 'r'
-            ball.reset(current_winner)
-        if ball.rect.x < 0:
-            current_winner = 'l'
-            ball.reset(current_winner)
-        if ball.rect.y < 0 or ball.rect.y > 480:
-            ball_path[1] = -ball_path[1]
-        if P1.rect.colliderect(ball.rect)== 1 or P2.rect.colliderect(ball.rect) == 1:
-            ball_path[0] = -ball_path[0]
-        #Makes the backround black
-        screen.fill(BLACK) 
-        #Draws our player
-        player_sprites_list.draw(screen) 
-        ball_sprite_list.draw(screen)
-        pygame.draw.rect(screen, WHITE, (320,0,5,480))
-        pygame.display.update()
+class mainGameClass():
+    
+
+    def gameState2(self):
+        global winner 
+        #Program loop
+        finished = True
+        while finished == True:
+            FPS.tick(FramesPerSecond)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            #Updates the position of the player
+            player_sprites_list.update()
+            #Collision Detection
+            ball.rect.move_ip(ball_path)
+            if ball.rect.x > 640:
+                current_winner = 'l'
+                current_scores[1] += 1
+                ball.reset(current_winner)
+            if ball.rect.x < 0:
+                current_winner = 'r'
+                current_scores[0] += 1
+                ball.reset(current_winner)
+
+            if ball.rect.y < 0 or ball.rect.y > 480:
+                ball_path[1] = -ball_path[1]
+            if P1.rect.colliderect(ball.rect)== 1 or P2.rect.colliderect(ball.rect) == 1:
+                ball_path[0] = -ball_path[0]
+            #Makes the backround black
+            screen.fill(BLACK) 
+            #Draws our player
+            
+            player_sprites_list.draw(screen) 
+            ball_sprite_list.draw(screen)
+            pygame.draw.rect(screen, WHITE, (320,0,5,480))
+            if current_scores[0] > 4 or current_scores[1] > 4:
+                time.sleep(2)
+                finished = False
+                screen.fill(BLACK)
+                if current_scores[0] > 4:
+                    winner = "Left"
+                else:
+                    winner = "Right"
+            pygame.display.update()
+    def getWinner(self):
+        return winner

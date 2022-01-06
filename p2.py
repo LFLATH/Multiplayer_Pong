@@ -13,8 +13,8 @@ class Player2(pygame.sprite.Sprite):
         #Gets the key stroke
         key = pygame.key.get_pressed()
         dist = 2 # distance moved in 1 frame,
-        if key[pygame.K_s] and self.rect.y  < 480 - 28 : # down key
+        if key[pygame.K_DOWN] and self.rect.y  < 480 - 28 : # down key
             self.rect.y += dist # move down
-        elif key[pygame.K_w] and self.rect.y > 0: # up key
+        elif key[pygame.K_UP] and self.rect.y > 0: # up key
             self.rect.y -= dist # move up
 
