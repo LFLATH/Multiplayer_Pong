@@ -1,4 +1,5 @@
 from openingScreen import *
+from endScreen import *
 from init import *
 #Init the sprites
 P1 = Player1()
@@ -48,10 +49,11 @@ current_scores = [0,0]
 #Init winner
 #Main Game Screen Method
 class mainGameClass():
+    def __init__(self):
+       self.winner = "Left"
     
 
     def gameState2(self):
-        global winner 
         #Program loop
         finished = True
         while finished == True:
@@ -66,11 +68,11 @@ class mainGameClass():
             ball.rect.move_ip(ball_path)
             if ball.rect.x > 640:
                 current_winner = 'l'
-                current_scores[1] += 1
+                current_scores[0] += 1
                 ball.reset(current_winner)
             if ball.rect.x < 0:
                 current_winner = 'r'
-                current_scores[0] += 1
+                current_scores[1] += 1
                 ball.reset(current_winner)
 
             if ball.rect.y < 0 or ball.rect.y > 480:
@@ -89,9 +91,10 @@ class mainGameClass():
                 finished = False
                 screen.fill(BLACK)
                 if current_scores[0] > 4:
-                    winner = "Left"
+                    self.winner = "Left"
                 else:
-                    winner = "Right"
+                    self.winner = "Right"
+                closingOBJ = endScreen(self.winner)
+                closingOBJ.gameState3()
+
             pygame.display.update()
-    def getWinner(self):
-        return winner
